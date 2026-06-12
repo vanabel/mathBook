@@ -1,0 +1,31 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.brf
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.nav
+*.snm
+*.run.xml
+*.mp
+*.mpx
+*.xdy
+
+# Output
+*.pdf
+*.xdv
+
+# Zip files
+*.zip
+
+# macOS
+.DS_Store

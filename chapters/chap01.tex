@@ -1,0 +1,54 @@
+\chapter{规范理论}\label{chap:1}
+\begin{refsection}
+本导论性章节旨在为后续章节的数学发展提供总体背景说明。我们给出全文所研究的基本方程，并简要介绍它们在物理学中的应用背景。
+
+\section{Yang--Mills--Higgs理论}\label{sec:ymh}
+
+在具有 $d$ 个空间维度的\iemph{Yang--Mills--Higgs}理论中，其动力学变量包括一个\iemph{规范势}（\iemph{联络}）
+\[
+A = A_j(x)\,dx^j
+\]
+以及一个\iemph{标量（Higgs）场}
+\[
+\Phi = \Phi(x) .
+\]
+
+在一个时间维加 $d$ 个空间维的情形下，变量形式类似。分量 $A_j(x)$ 取值于一个矩阵李群 $G$ 的李代数 $\mathfrak{g}$，该群 $G$ 被称为\iemph{规范群}。场 $\Phi$ 取值于一个向量空间 $\mathbb{L}$（称为\iemph{内部对称空间}），群 $G$ 作为变换群作用于其上。
+
+Yang--Mills势定义了一个\iemph{场}（\iemph{曲率}）
+\begin{equation}\label{eq:1.1.1}
+F = dA + A\wedge A = \frac12 F_{ij}(x)\,dx^i\wedge dx^j ,
+\end{equation}
+其分量为
+\begin{equation}\label{eq:1.1.2}
+F_{ij}(x)
+ = \partial_i A_j(x) - \partial_j A_i(x)
+   + [A_i(x),A_j(x)] .
+\end{equation}
+此处及以下均采用求和约定。
+
+Higgs场通过协变导数与联络发生耦合，这称为“最小耦合”。设 $\rho$ 为群 $G$ 在 $\mathbb{L}$ 上的一个线性表示，则 $\rho$ 诱导出李代数 $\mathfrak{g}$ 在 $\mathbb{L}$ 上的表示，\iemph{协变导数}定义为
+\begin{subequations}
+  \begin{equation}\label{eq:1.1.3a}
+    (\nabla_{A})_j(\Phi) = \nabla_j\Phi + \rho(A_j)(\Phi),
+  \end{equation}
+  并且
+  \begin{equation}\label{eq:1.1.3b}
+    D_A\Phi = (\nabla_A)_j(\Phi)\,dx^j .
+  \end{equation}
+\end{subequations}
+在\cref{chap:1}中，我们研究定义在 $\mathbb{R}^2$ 上的\uwave{阿贝尔Higgs模型}\index{Higgs模型!阿贝尔|hyperpage}，其规范群为 $G=U(1)$。
+\begin{rmk}
+文献引用示例：Belavin 等人的 BPST 瞬子 \cite{belavin1975}；Polyakov 的工作 \cite{polyakov1974,polyakov1977}。
+\end{rmk}
+
+\begin{thm}[示例定理]\label{thm:example}
+设 $G$ 为紧 Lie 群，$A$ 为 $\mathfrak{g}$-值联络。则 $F_A = dA + A \wedge A$ 满足 Bianchi 恒等式 $D_A F_A = 0$。
+\end{thm}
+
+\begin{proof}[Bianchi 恒等式]
+直接计算协变外微分即可。
+\end{proof}
+
+\printbibliography[heading=subbibliography,title=本章参考文献]
+\end{refsection}

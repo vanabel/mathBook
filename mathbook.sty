@@ -1,0 +1,127 @@
+%% -*- mode: TeX -*-
+%% -*- coding: utf-8 -*-
+% mathbook.sty -- Preamble bundle for elegantbook math books
+% (Chinese index, theorems+cleveref, mpost, biblatex tweaks)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathbook}[2026/06/12 Math book preamble bundle]
+
+\RequirePackage{bookmark}
+\RequirePackage{xparse}
+
+% Optional proof title (elegantbook proof + optional heading)
+\makeatletter
+\let\MBproof\proof
+\let\endMBproof\endproof
+\makeatother
+
+\RenewDocumentEnvironment{proof}{ o }{%
+  \begingroup
+  \IfNoValueF{#1}{\renewcommand{\proofname}{#1}}%
+  \MBproof
+}{%
+  \endMBproof
+  \IfNoValueF{#1}{\renewcommand{\proofname}{证明}}%
+  \endgroup
+}
+
+\ctexset{punct=banjiao}
+\RequirePackage[all]{xy}
+\RequirePackage{subcaption}
+\RequirePackage{amsmath,amssymb,mathrsfs,mathtools,bbm}
+\RequirePackage{enumitem}
+\RequirePackage[nameinlink,capitalize]{cleveref}
+
+\elegantnewtheorem{thm}{定理}{thmstyle}{thm}[theorem]
+\elegantnewtheorem{lem}{引理}{thmstyle}{lem}[theorem]
+\elegantnewtheorem{defn}{定义}{defstyle}{defn}[theorem]
+\elegantnewtheorem{cor}{推论}{thmstyle}{cor}[theorem]
+\elegantnewtheorem{prop}{命题}{prostyle}{prop}[theorem]
+\elegantnewtheorem{examp}{例}{prostyle}{examp}[theorem]
+\renewcommand{\examplename}{例}
+\elegantnewtheorem{prob}{问题}{prostyle}{prob}[theorem]
+\elegantnewtheorem{rmk}{注意}{attstyle}{rmk}[theorem]
+\newtheorem{conj}{猜想}
+
+\crefname{figure}{图}{图}
+\crefname{section}{节}{节}
+\Crefname{section}{节}{节}
+\crefname{chapter}{章}{章}
+\Crefname{chapter}{章}{章}
+\pretocmd{\appendix}{%
+  \crefalias{chapter}{appchapter}%
+}{}{}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\RequirePackage[checksum,lineno]{mpostinl}
+\mpostsetup{template=images/\mpostfilename-#1.mps}
+
+\begin{mpostdef}
+  numeric u;
+  u:=10pt;
+  def draw_axis(expr O, len, s, labo, labx, laby) =
+    drawarrow (s*len*left -- (1-s)*len*right) shifted O;
+    drawarrow (s*len*down -- (1-s)*len*up) shifted O;
+    label.lrt(labo, O);
+    label.urt(laby, O + (1-s)*len*up);
+    label.top(labx, O + (1-s)*len*right);
+  enddef;
+  vardef sawtooth_pen(expr teeth, width, height) =
+    save p, i, step, half_step;
+    path p;
+    numeric step, half_step;
+    step := width / teeth;
+    half_step := step / 2;
+    p := (0,0)
+         for i=0 upto teeth-1:
+           -- ((i*step + half_step), height)
+           -- ((i+1)*step, 0)
+         endfor
+         -- (0,0) -- cycle;
+    makepen(p shifted (-width/2, -height/2))
+  enddef;
+  def sawtooth_pen_default=sawtooth_pen_default(8,2bp,1bp) enddef;
+  def arrow_label(expr p, dr, len)(text lab) =
+    drawarrow ((-unitvector(dr))*len--origin) shifted p;
+    label(lab, p-unitvector(dr)*(len+0.4u));
+  enddef;
+\end{mpostdef}
+
+\begin{mposttex}
+  \usepackage{amssymb,bm,xcolor,amsmath}
+  \usepackage{CJKutf8}
+  \AtBeginDocument{\begin{CJK*}{UTF8}{gkai}}
+  \AtEndDocument{\end{CJK*}}
+\end{mposttex}
+
+\RequirePackage[normalem]{ulem}
+\newcommand{\iemph}[2][]{\uwave{#2}\if\relax\detokenize{#1}\relax\index{#2|hyperpage}\else\index{#1!#2|hyperpage}\fi}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\makeatletter
+\@newctr{footnote}[page]
+\makeatother
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\End}{\mathrm{End}}
+
+\setlength{\footskip}{14pt}
+
+\RequirePackage{imakeidx}
+\makeatletter
+\def\imki@progdefault{zhmakeindex}
+\makeatother
+\makeindex[intoc, columns=2, columnseprule=false, columnsep=5pt, options={-s zh.ist -z pinyin}]
+
+\ExecuteBibliographyOptions{
+  doi=false,
+  url=false,
+  isbn=false,
+  eprint=false
+}
+\DeclareFieldFormat{addendum}{%
+  \addspace\href{https://mathscinet.ams.org/mathscinet-getitem?mr=#1}{MR#1}%
+}
+
+\endinput

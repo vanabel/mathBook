@@ -1,0 +1,56 @@
+% !Mode:: "TeX:UTF-8"
+% !TEX program = xelatex
+%% -*- mode: TeX -*-
+%% -*- coding: utf-8 -*-
+\documentclass[zihao=-4,b5paper,cn,pad,scheme=chinese,mode=fancy,section,%
+  bibend=biber,refsection=chapter,citestyle=gb7714-2015,bibstyle=gb7714-2015,%
+  fontset=adobe,result=noanswer]{elegantbook}
+
+% =====================================================================
+% Template for writing math books (elegantbook + mathbook.sty).
+%
+% Usage:
+% - Edit the "Book metadata" block below.
+% - Put bib entries into references.bib (or change \addbibresource{...}).
+% - Add chapters under chapters/ and \include them below.
+% - Compile: make   (requires XeLaTeX + biber + zhmakeindex in PATH)
+%
+% Example instance: Jaffe--Taubes, *Vortices and Monopoles*.
+% =====================================================================
+
+\ExecuteBibliographyOptions{sorting=nyt}
+\usepackage{mathbook}
+
+% =====================================================================
+% Book metadata (EDIT THIS BLOCK)
+% =====================================================================
+\title{涡旋与磁单极子}
+\subtitle{静态规范理论的结构}
+\extrainfo{这是一本基于作者最新成果的、关于涡旋和磁单极子的相当前沿的严格数学处理著作。}
+\institute{哈佛大学·马萨诸塞州剑桥市·02138}
+\author{阿瑟·贾菲（Arthur Jaffe）；克利福德·陶布斯（Clifford Taubes）（著）；破旧的大卡车（译）}
+\date{1980}
+%\cover{images/cover.png}
+
+\addbibresource[location=local]{references.bib}
+
+\begin{document}
+\thispagestyle{empty}
+\addcontentsline{toc}{chapter}{封面}
+\maketitle
+
+\frontmatter
+\tableofcontents
+\addcontentsline{toc}{chapter}{目录}
+
+\mainmatter
+\include{chapters/preface}
+\include{chapters/chap01}
+
+% \include{chapters/chap02}
+% \appendix
+% \include{chapters/appendixA}
+
+\backmatter
+\printindex
+\end{document}
