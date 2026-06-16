@@ -18,10 +18,10 @@ DIR_EXAMPLES = $(DIR_DOC)/examples
 all: pdf
 
 pdf:
-	latexmk -xelatex -interaction=nonstopmode $(TEX)
+	latexmk -xelatex -shell-escape -interaction=nonstopmode $(TEX)
 
 watch:
-	latexmk -xelatex -pvc -interaction=nonstopmode $(TEX)
+	latexmk -xelatex -shell-escape -pvc -interaction=nonstopmode $(TEX)
 
 clean:
 	latexmk -c $(TEX)

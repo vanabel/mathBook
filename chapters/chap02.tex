@@ -1,0 +1,19 @@
+\chapter{作图测试}
+
+\section{中文标签 \texttt{dotlabel}}
+
+图中中文须用 \texttt{btex\ldots etex}（不能用引号字符串）；\texttt{mpost-lib.tex} 的 \texttt{mposttex} 已加载 \texttt{CJKutf8}。
+
+\begin{mpostfig}[label=labels-cn-demo,show]
+  z0 = origin;
+  z1 = (2,1) scaled u;
+  z2 = (-1.5,1.5) scaled u;
+  draw fullcircle scaled 3u withcolor .7 white;
+  for i=0,1,2:
+    pickup defaultpen;
+    drawoptions(withpen pencircle scaled 3pt);
+    dotlabel("", z[i]);
+  endfor
+  drawoptions();
+  dotlabel.rt(btex 圆心 etex, z[0]);
+\end{mpostfig}
