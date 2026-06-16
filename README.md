@@ -14,24 +14,35 @@
 
 ### 快速开始
 
-**依赖**：XeLaTeX、Biber、`gb7714` 宏包、`imakeidx`、MetaPost（若使用 `mpostinl` 绘图）。
+**依赖**：XeLaTeX、Biber、`gb7714` 宏包、`imakeidx`、MetaPost（若使用 `mpostinl` 绘图；编译需 `-shell-escape`，已在 `.latexmkrc` 中配置）。
 
 ```bash
-make
+make help     # 查看所有编译目标
+make          # 单次编译
+make watch    # 实时自动编译（推荐写作时使用）
 ```
 
-或：
+`make watch`（或 `make live`）等价于 `latexmk -pvc -view=default`，会在后台监听文件保存；每次保存后只增量编译改动部分，并自动刷新 PDF 阅读器（macOS 上优先使用 Skim）。按 `Ctrl+C` 退出。
+
+或手动：
 
 ```bash
 export PATH="$(pwd):$PATH"
-latexmk -xelatex -interaction=nonstopmode main.tex
+latexmk -pvc -view=default main.tex
 ```
 
-**连续编译**：
+**编译目标一览**
 
-```bash
-make watch
-```
+| 命令 | 说明 |
+|------|------|
+| `make` / `make pdf` | 单次完整编译 |
+| `make watch` / `make live` | 持续预览：保存即增量编译并刷新 PDF |
+| `make clean` | 清理中间文件 |
+| `make distclean` | 清理中间文件及 PDF |
+| `make zip` | 打包发布 |
+| `make help` | 显示上述命令摘要 |
+
+`.latexmkrc` 已预设 XeLaTeX、`shell-escape`（MetaPost）、`synctex=1`（正反向跳转）及依赖追踪（增量编译）。
 
 **写作入口**：
 
@@ -48,8 +59,9 @@ make watch
 | `amsart` | `elegantbook` |
 | `mathpaper.sty` | `mathbook.sty` |
 | BibTeX + AMSRefs | Biber + `gb7714-2015` |
-| `pdflatex` / `latexmk -pdf` | `xelatex` / `latexmk -xelatex` |
+| `pdflatex` / `latexmk -pdf` | `xelatex` / `latexmk`（`.latexmkrc`） |
 | 单文件正文 | `chapters/*.tex` 分章 |
+| — | `make watch`（`latexmk -pvc`）实时编译 |
 
 ---
 

@@ -1,4 +1,4 @@
-.PHONY: all pdf clean distclean zip watch install install-user
+.PHONY: all pdf watch live clean distclean zip install install-user help
 
 NAME := mathbook
 TEX := main.tex
@@ -15,13 +15,23 @@ DIR_SOURCE = $(LOCAL)/source/latex/$(NAME)
 DIR_DOC    = $(LOCAL)/doc/latex/$(NAME)
 DIR_EXAMPLES = $(DIR_DOC)/examples
 
+LATEXMK = latexmk
+
 all: pdf
 
-pdf:
-	latexmk -xelatex -shell-escape -interaction=nonstopmode $(TEX)
+help:
+	@echo "make        单次编译 $(PDF)"
+	@echo "make watch  实时自动编译（latexmk -pvc，保存即增量编译并刷新 PDF）"
+	@echo "make live   同 make watch"
+	@echo "make clean  清理中间文件"
+	@echo "make zip    打包发布"
 
-watch:
-	latexmk -xelatex -shell-escape -pvc -interaction=nonstopmode $(TEX)
+pdf:
+	$(LATEXMK) $(TEX)
+
+watch live:
+	@echo ">> 实时编译已开启：保存 .tex 后自动增量编译并刷新 PDF（Ctrl+C 退出）"
+	$(LATEXMK) -pvc -view=default $(TEX)
 
 clean:
 	latexmk -c $(TEX)
