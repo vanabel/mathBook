@@ -73,7 +73,7 @@ latexmk -pvc -view=default main.tex
 
 ### 中文索引（`zhmakeindex`）
 
-模板通过 `imakeidx` 调用项目目录下的 `zhmakeindex`，配合 `zh.ist` 实现中文拼音索引。`Makefile` 已自动将当前目录加入 `PATH`。
+模板通过 `imakeidx` 调用项目目录下的 `zhmakeindex`，配合 `zh.ist` 实现中文拼音索引。`Makefile` 已自动将当前目录加入 `PATH`；`.latexmkrc` 中 `$makeindex` 已配置为 `zhmakeindex -z pinyin`（若用默认 `makeindex`，索引会缺少拼音首字母分组标题）。
 
 > **注意**：随项目附带的 `zhmakeindex` 为 macOS x86_64 可执行文件。Apple Silicon 机器通常可通过 Rosetta 运行；若无法运行，请自行编译或替换为可用的 `zhmakeindex` 二进制，并确保其在 `PATH` 中。
 
