@@ -1,7 +1,7 @@
 %% -*- mode: TeX -*-
 %% -*- coding: utf-8 -*-
 % mathbook.sty -- Preamble bundle for elegantbook math books
-% (Chinese index, theorems+cleveref, mpost, biblatex tweaks)
+% (Chinese index, theorems+cleveref, biblatex tweaks)
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{mathbook}[2026/06/12 Math book preamble bundle]
 
@@ -55,47 +55,6 @@
 }{}{}
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
-
-\RequirePackage[checksum,lineno,labelnames,latex]{mpostinl}
-\mpostsetup{template=images/\mpostfilename-#1.mps}
-
-\begin{mpostdef}
-  numeric u;
-  u:=10pt;
-  def draw_axis(expr O, len, s, labo, labx, laby) =
-    drawarrow (s*len*left -- (1-s)*len*right) shifted O;
-    drawarrow (s*len*down -- (1-s)*len*up) shifted O;
-    label.lrt(labo, O);
-    label.urt(laby, O + (1-s)*len*up);
-    label.top(labx, O + (1-s)*len*right);
-  enddef;
-  vardef sawtooth_pen(expr teeth, width, height) =
-    save p, i, step, half_step;
-    path p;
-    numeric step, half_step;
-    step := width / teeth;
-    half_step := step / 2;
-    p := (0,0)
-         for i=0 upto teeth-1:
-           -- ((i*step + half_step), height)
-           -- ((i+1)*step, 0)
-         endfor
-         -- (0,0) -- cycle;
-    makepen(p shifted (-width/2, -height/2))
-  enddef;
-  def sawtooth_pen_default=sawtooth_pen_default(8,2bp,1bp) enddef;
-  def arrow_label(expr p, dr, len)(text lab) =
-    drawarrow ((-unitvector(dr))*len--origin) shifted p;
-    label(lab, p-unitvector(dr)*(len+0.4u));
-  enddef;
-\end{mpostdef}
-
-\begin{mposttex}
-  \usepackage{amssymb,bm,xcolor,amsmath}
-  \usepackage{CJKutf8}
-  \AtBeginDocument{\begin{CJK*}{UTF8}{gkai}}
-  \AtEndDocument{\end{CJK*}}
-\end{mposttex}
 
 \RequirePackage[normalem]{ulem}
 \newcommand{\iemph}[2][]{\uwave{#2}\if\relax\detokenize{#1}\relax\index{#2|hyperpage}\else\index{#1!#2|hyperpage}\fi}

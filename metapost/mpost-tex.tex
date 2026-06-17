@@ -1,0 +1,11 @@
+% metapost/mpost-tex.tex — LaTeX preamble for MetaPost figures (mpostinl mposttex)
+%
+% Loaded from main.tex after \usepackage{mpostinl}.
+% Enables Chinese btex/etex labels inside figures.
+
+\begin{mposttex}
+  \usepackage{amssymb,bm,xcolor,amsmath}
+  \usepackage{CJKutf8}
+  \AtBeginDocument{\begin{CJK*}{UTF8}{gkai}}
+  \AtEndDocument{\end{CJK*}}
+\end{mposttex}

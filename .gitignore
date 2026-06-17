@@ -29,3 +29,6 @@
 
 # macOS
 .DS_Store
+
+# Per-project Makefile overrides (see Makefile.local.example)
+Makefile.local

@@ -21,6 +21,12 @@
 \ExecuteBibliographyOptions{sorting=nyt}
 \usepackage{mathbook}
 
+% MetaPost (optional): omit all three lines if the book has no mpost figures.
+\usepackage[checksum,lineno,labelnames,latex]{mpostinl}
+\mpostsetup{template=images/\mpostfilename-#1.mps}
+\input{metapost/mpost-tex.tex}
+\input{metapost/mpost-def.tex}
+
 % =====================================================================
 % Book metadata (EDIT THIS BLOCK)
 % =====================================================================

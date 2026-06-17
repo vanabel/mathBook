@@ -2,8 +2,9 @@
 
 一个尽量“开箱即用”的数学专著写作模板，示例实例为 Jaffe--Taubes《涡旋与磁单极子》的排版配置。
 
-- **主文件**：`main.tex`
-- **导言区包**：`mathbook.sty`（定理环境、`cleveref`、中文索引、`mpostinl`、biblatex 选项等）
+- **主文件**：`main.tex`（可用 `make MAIN=...` 或 `Makefile.local` 换入口）
+- **导言区包**：`mathbook.sty`（定理环境、`cleveref`、中文索引、biblatex 选项等）
+- **MetaPost**：`main.tex` 中加载 `mpostinl`；`metapost/` 目录（`mpost-tex.tex` 图内中文、`mpost-def.tex` 作图宏）
 - **文档类**：`elegantbook.cls`（项目内自带）
 - **中文索引**：`zh.ist` + `zhmakeindex`（拼音排序）
 - **示例文献库**：`references.bib`
@@ -18,11 +19,15 @@
 
 ```bash
 make help     # 查看所有编译目标
-make          # 单次编译
+make          # 单次编译（默认 main.tex）
 make watch    # 实时自动编译（推荐写作时使用）
+make MAIN=book.tex          # 指定入口文件
+cp Makefile.local.example Makefile.local   # 长期固定入口文件
 ```
 
 `make watch`（或 `make live`）等价于 `latexmk -pvc -view=default`，会在后台监听文件保存；每次保存后只增量编译改动部分，并自动刷新 PDF 阅读器（macOS 上优先使用 Skim）。按 `Ctrl+C` 退出。
+
+入口文件默认为 `main.tex`。多项目同仓时可在 `Makefile.local` 中写 `MAIN := riemann.tex`，或单次编译时 `make MAIN=riemann.tex watch`。
 
 或手动：
 
@@ -48,7 +53,8 @@ latexmk -pvc -view=default main.tex
 
 1. 修改 `main.tex` 中的 “Book metadata” 块（书名、作者、日期等）。
 2. 在 `chapters/` 下新增或编辑章节，并在 `main.tex` 中 `\include{...}`。
-3. 文献写入 `references.bib`，正文用 `\cite{key}`；每章可用 `\begin{refsection}...\printbibliography...\end{refsection}` 生成分章参考文献。
+3. 需要作图时：在 `main.tex` 加载 `mpostinl`，并 `\input{metapost/mpost-tex.tex}`、`\input{metapost/mpost-def.tex}`（无图可删这三行）。
+4. 文献写入 `references.bib`，正文用 `\cite{key}`；每章可用 `\begin{refsection}...\printbibliography...\end{refsection}` 生成分章参考文献。
 
 ---
 

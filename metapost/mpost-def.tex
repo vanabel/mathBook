@@ -1,0 +1,21 @@
+% metapost/mpost-def.tex — project-specific MetaPost macros (mpostinl mpostdef)
+%
+% Loaded from main.tex after metapost/mpost-tex.tex.
+% Put shared figure macros, colors, and helpers here.
+
+\begin{mpostdef}
+  numeric u;
+  u := 10pt;
+
+  color slash;
+  slash := .85white;
+
+  def coordtwo(expr O, len, sx, sy) =
+    drawarrow ((-0.1len,0)--(0.9len,0)) shifted O;
+    drawarrow ((0,-0.1len)--(0,0.9len)) shifted O;
+  enddef;
+
+  def hatchfill expr p =
+    fill p
+  enddef;
+\end{mpostdef}

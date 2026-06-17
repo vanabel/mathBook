@@ -1,0 +1,2 @@
+# Copy to Makefile.local (gitignored) to set the default entry file for this project.
+# MAIN := riemann.tex
