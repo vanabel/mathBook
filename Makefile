@@ -10,7 +10,12 @@ JOB := $(basename $(MAIN))
 VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0)
 ZIP := mathbook-$(VERSION).zip
 
-export PATH := $(CURDIR):$(PATH)
+# Prefer system zhmakeindex; bundled ./zhmakeindex is fallback only (may SIGSEGV on Apple Silicon).
+ZHMAKEINDEX ?= $(shell command -v zhmakeindex 2>/dev/null)
+ifeq ($(ZHMAKEINDEX),)
+  ZHMAKEINDEX := $(CURDIR)/zhmakeindex
+endif
+export ZHMAKEINDEX
 
 UTREE = $(shell kpsewhich -var-value TEXMFHOME)
 LOCAL = $(shell kpsewhich -var-value TEXMFLOCAL)
@@ -32,9 +37,11 @@ help:
 	@echo "make zip    打包发布"
 
 pdf:
+	@echo ">> zhmakeindex: $(ZHMAKEINDEX)"
 	$(LATEXMK) $(MAIN)
 
 watch live:
+	@echo ">> zhmakeindex: $(ZHMAKEINDEX)"
 	@echo ">> 实时编译已开启：保存 .tex 后自动增量编译并刷新 PDF（Ctrl+C 退出）"
 	$(LATEXMK) -pvc -view=default $(MAIN)
 

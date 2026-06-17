@@ -1,2 +1,3 @@
-# Copy to Makefile.local (gitignored) to set the default entry file for this project.
+# Copy to Makefile.local (gitignored) to set per-project overrides.
 # MAIN := riemann.tex
+# ZHMAKEINDEX := /usr/local/bin/zhmakeindex

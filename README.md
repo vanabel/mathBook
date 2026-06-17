@@ -15,7 +15,7 @@
 
 ### 快速开始
 
-**依赖**：XeLaTeX、Biber、`gb7714` 宏包、`imakeidx`、MetaPost（若使用 `mpostinl` 绘图；编译需 `-shell-escape`，已在 `.latexmkrc` 中配置）。
+**依赖**：XeLaTeX、Biber、`gb7714` 宏包、`imakeidx`、**`zhmakeindex`**（中文索引，见下节安装说明）、MetaPost（若使用 `mpostinl` 绘图；编译需 `-shell-escape`，已在 `.latexmkrc` 中配置）。
 
 ```bash
 make help     # 查看所有编译目标
@@ -32,9 +32,10 @@ cp Makefile.local.example Makefile.local   # 长期固定入口文件
 或手动：
 
 ```bash
-export PATH="$(pwd):$PATH"
 latexmk -pvc -view=default main.tex
 ```
+
+勿将项目目录置于 `PATH` 最前（`export PATH="$(pwd):$PATH"` 会优先调用 bundled 的 x86_64 `zhmakeindex`，在 Apple Silicon 上可能段错误）。
 
 **编译目标一览**
 
@@ -73,9 +74,69 @@ latexmk -pvc -view=default main.tex
 
 ### 中文索引（`zhmakeindex`）
 
-模板通过 `imakeidx` 调用项目目录下的 `zhmakeindex`，配合 `zh.ist` 实现中文拼音索引。`Makefile` 已自动将当前目录加入 `PATH`；`.latexmkrc` 中 `$makeindex` 已配置为 `zhmakeindex -z pinyin`（若用默认 `makeindex`，索引会缺少拼音首字母分组标题）。
+模板通过 `imakeidx` + `zhmakeindex` 配合 `zh.ist` 实现中文拼音索引（`-z pinyin` 生成 A/B/C… 分组标题）。`Makefile` 与 `.latexmkrc` **优先使用系统 PATH 中的** `zhmakeindex`（如 `/usr/local/bin/zhmakeindex`）；项目内 bundled 的 x86_64 副本仅作无系统安装时的后备，**在 Apple Silicon 上可能 SIGSEGV，建议删除或勿置于 PATH 最前**。
 
-> **注意**：随项目附带的 `zhmakeindex` 为 macOS x86_64 可执行文件。Apple Silicon 机器通常可通过 Rosetta 运行；若无法运行，请自行编译或替换为可用的 `zhmakeindex` 二进制，并确保其在 `PATH` 中。
+编译时 `imakeidx`（`xelatex --shell-escape` 期间）与 `latexmk`（`$makeindex` 规则）都会调用 `zhmakeindex`，二者须指向同一可用二进制。若 `make watch` 索引缺拼音分组，检查 `make` 开头打印的 `zhmakeindex:` 路径；可在 `Makefile.local` 中设置：
+
+```makefile
+ZHMAKEINDEX := /usr/local/bin/zhmakeindex   # macOS/Linux 示例
+# ZHMAKEINDEX := C:/texlive/bin/windows/zhmakeindex.exe   # Windows 示例
+```
+
+#### 安装 zhmakeindex
+
+`zhmakeindex` 是独立命令行工具（[GitHub](https://github.com/leo-liu/zhmakeindex) / [CTAN](https://ctan.org/pkg/zhmakeindex)），**近年 TeX Live / MacTeX 默认不再附带**，需自行安装。安装后请确认：
+
+```bash
+command -v zhmakeindex    # 能找到可执行文件
+zhmakeindex -help         # 能正常输出中文帮助
+```
+
+**Apple Silicon（M 系列 Mac）**
+
+bundled 或 CTAN 附带的 macOS 二进制多为 x86_64，在 ARM Mac 上可能段错误。推荐用 Go 从源码编译原生 arm64 版本：
+
+```bash
+# 1. 安装 Go：https://go.dev/dl/ （选 macOS ARM64 安装包）
+# 2. 编译
+git clone https://github.com/leo-liu/zhmakeindex.git
+cd zhmakeindex
+go mod tidy
+go build -o zhmakeindex
+
+# 3. 安装到 PATH（二选一）
+sudo mv zhmakeindex /usr/local/bin/
+# 或：mkdir -p ~/bin && mv zhmakeindex ~/bin/  （确保 ~/bin 在 PATH 中）
+
+# 4. 验证
+zhmakeindex -help
+```
+
+若你已有可用的 `/usr/local/bin/zhmakeindex`（例如此前手动安装），可直接使用，**删除项目目录下的 `./zhmakeindex` 即可**。
+
+**Windows**
+
+1. 从 [CTAN 下载 zhmakeindex](https://ctan.org/pkg/zhmakeindex) 解压，在 `bin` 子目录中找到 `win32`（或 `windows`）下的 `zhmakeindex.exe`；或从 [GitHub 仓库](https://github.com/leo-liu/zhmakeindex) 获取源码自行编译。
+2. 将 `zhmakeindex.exe` 放到已在 `PATH` 中的目录，例如：
+   - TeX Live：`C:\texlive\2025\bin\windows\`
+   - MiKTeX：MiKTeX 安装目录下的 `miktex\bin\x64\`
+   - 或自建 `C:\Users\<你>\bin\` 并加入系统环境变量 PATH
+3. 打开新的命令提示符 / PowerShell，运行 `zhmakeindex -help` 验证。
+4. 在本项目中用 `make` 编译时，若未自动找到，可在 `Makefile.local` 写完整路径（见上）。
+
+**从源码编译（Apple Silicon / Windows / Linux 通用）**
+
+已安装 [Go](https://go.dev/dl/) 时，在仓库根目录执行：
+
+```bash
+git clone https://github.com/leo-liu/zhmakeindex.git
+cd zhmakeindex
+go mod tidy
+go build -o zhmakeindex        # macOS/Linux
+# go build -o zhmakeindex.exe  # Windows
+```
+
+将生成的可执行文件放入 PATH 即可。Windows 用户也可在解压后的 CTAN 目录中运行 `install.cmd`（需已安装 Go 且 `go` 在 PATH 中）。
 
 索引条目示例（正文中）：
 
