@@ -1,4 +1,6 @@
-$pdf_mode = 5;            # xelatex
+$pdf_mode = 5;            # xelatex → .xdv → xdvipdfmx → .pdf
+$dvi_mode = 0;
+$postscript_mode = 0;
 $bibtex_use = 2;          # biber
 $recorder = 1;            # .fdb_latexmk：追踪依赖，增量编译
 $dependents_list = 1;

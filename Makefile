@@ -24,7 +24,7 @@ DIR_SOURCE = $(LOCAL)/source/latex/$(NAME)
 DIR_DOC    = $(LOCAL)/doc/latex/$(NAME)
 DIR_EXAMPLES = $(DIR_DOC)/examples
 
-LATEXMK = latexmk
+LATEXMK = latexmk -xelatex
 
 all: pdf
 
@@ -43,7 +43,7 @@ pdf:
 watch live:
 	@echo ">> zhmakeindex: $(ZHMAKEINDEX)"
 	@echo ">> 实时编译已开启：保存 .tex 后自动增量编译并刷新 PDF（Ctrl+C 退出）"
-	$(LATEXMK) -pvc -view=default $(MAIN)
+	$(LATEXMK) -pvc -view=pdf $(MAIN)
 
 clean:
 	latexmk -c $(MAIN)

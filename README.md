@@ -25,14 +25,14 @@ make MAIN=book.tex          # 指定入口文件
 cp Makefile.local.example Makefile.local   # 长期固定入口文件
 ```
 
-`make watch`（或 `make live`）等价于 `latexmk -pvc -view=default`，会在后台监听文件保存；每次保存后只增量编译改动部分，并自动刷新 PDF 阅读器（macOS 上优先使用 Skim）。按 `Ctrl+C` 退出。
+`make watch`（或 `make live`）等价于 `latexmk -xelatex -pvc -view=pdf`：XeLaTeX 先写出中间文件 `.xdv`，再由 `xdvipdfmx` 生成最终 `.pdf`；日志里 `xelatex` 规则较多属正常，完整一轮末尾应有 `xdvipdfmx` 与 `update_view`。若只有 `.xdv` 而无 `.pdf`，说明编译未跑完（常见原因：索引/biber 报错、中途退出）。
 
 入口文件默认为 `main.tex`。多项目同仓时可在 `Makefile.local` 中写 `MAIN := riemann.tex`，或单次编译时 `make MAIN=riemann.tex watch`。
 
 或手动：
 
 ```bash
-latexmk -pvc -view=default main.tex
+latexmk -xelatex -pvc -view=pdf main.tex
 ```
 
 勿将项目目录置于 `PATH` 最前（`export PATH="$(pwd):$PATH"` 会优先调用 bundled 的 x86_64 `zhmakeindex`，在 Apple Silicon 上可能段错误）。
