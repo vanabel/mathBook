@@ -18,6 +18,9 @@
 *.run.xml
 *.mp
 *.mpx
+*.mps
+*.lof
+*.lol
 *.xdy
 
 # Output
@@ -34,6 +37,9 @@
 _minted/
 _minted-*
 *.message.minted
+*.data.minted
+*.config.minted
+*-SAVE-ERROR
 __pycache__/
 *.pyc
 .latexminted_config

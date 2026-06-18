@@ -69,7 +69,7 @@ export PATH="$(pwd):$PATH"
 - 优先调用 bundled 的 x86_64 `zhmakeindex` → Apple Silicon 上可能 **SIGSEGV**
 - 可能找不到 TeX Live 里的 `latexminted`
 
-模板 `Makefile` 将 TeX `bin` 置于 PATH 前，且**不** prepend `$(CURDIR)`。
+模板 `Makefile` / `.latexmkrc` 用 `command -v xelatex`（经 `abs_path` 解析，兼容 symlink 到 `xetex`）定位 TeX `bin`，并设置 `SELFAUTOLOC`，确保 `latexminted` 可被 minted v3 找到。`make` 会打印 `>> TeX bin:`，应类似 `/usr/local/texlive/2025/bin/universal-darwin`。
 
 ### Makefile.local 常用覆盖
 

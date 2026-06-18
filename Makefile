@@ -17,9 +17,12 @@ ifeq ($(ZHMAKEINDEX),)
 endif
 export ZHMAKEINDEX
 
-# TeX bin first (latexminted for minted v3); do not prepend $(CURDIR) — breaks zhmakeindex on ARM.
-TEXBIN := $(dir $(abspath $(shell command -v kpsewhich 2>/dev/null)))
-export PATH := $(TEXBIN)$(PATH)
+# TeX bin (latexminted for minted v3): resolve xelatex/xetex via command -v + abs_path.
+TEXBIN := $(shell perl -MCwd=abs_path -e 'for (qw(xelatex xetex)) { my $$p=`command -v $$_ 2>/dev/null`; chomp $$p; next unless $$p && -x $$p; $$p=abs_path($$p); if ($$p =~ m{^(.*)/(xelatex|xetex)$$}) { print $$1; last } }')
+ifneq ($(TEXBIN),)
+export SELFAUTOLOC := $(TEXBIN)
+export PATH := $(TEXBIN):$(PATH)
+endif
 
 UTREE = $(shell kpsewhich -var-value TEXMFHOME)
 LOCAL = $(shell kpsewhich -var-value TEXMFLOCAL)

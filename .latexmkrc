@@ -1,11 +1,22 @@
 # Ensure TeX Live/MiKTeX bin (latexminted for minted v3) is on PATH for shell-escape.
+# kpsewhich xelatex returns a script name on macOS, not the bin directory; use
+# command -v + abs_path (xelatex may resolve to .../xetex).
 use Cwd 'abs_path';
 BEGIN {
-  my $kpsewhich = `kpsewhich xelatex 2>/dev/null`;
-  chomp $kpsewhich;
-  if ($kpsewhich =~ m{^(.*)/xelatex$}) {
-    my $texbin = $1;
+  my $texbin;
+  for my $cmd (qw(xelatex xetex)) {
+    my $path = `command -v $cmd 2>/dev/null`;
+    chomp $path;
+    next unless $path && -x $path;
+    $path = abs_path($path);
+    next unless $path =~ m{^(.*)/(xelatex|xetex)$};
+    $texbin = $1;
+    last;
+  }
+  if ($texbin) {
     $ENV{PATH} = "$texbin:$ENV{PATH}" unless $ENV{PATH} =~ /\Q$texbin\E/;
+    $ENV{SELFAUTOLOC} = $texbin
+      unless defined $ENV{SELFAUTOLOC} && length $ENV{SELFAUTOLOC};
   }
 }
 
