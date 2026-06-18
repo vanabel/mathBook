@@ -1,3 +1,14 @@
+# Ensure TeX Live/MiKTeX bin (latexminted for minted v3) is on PATH for shell-escape.
+use Cwd 'abs_path';
+BEGIN {
+  my $kpsewhich = `kpsewhich xelatex 2>/dev/null`;
+  chomp $kpsewhich;
+  if ($kpsewhich =~ m{^(.*)/xelatex$}) {
+    my $texbin = $1;
+    $ENV{PATH} = "$texbin:$ENV{PATH}" unless $ENV{PATH} =~ /\Q$texbin\E/;
+  }
+}
+
 $pdf_mode = 5;            # xelatex → .xdv → xdvipdfmx → .pdf
 $dvi_mode = 0;
 $postscript_mode = 0;
@@ -7,7 +18,7 @@ $dependents_list = 1;
 $show_time = 1;
 
 $xelatex = 'xelatex -shell-escape -synctex=1 -interaction=nonstopmode %O %S';
-$clean_ext = 'bbl bcf run.xml idx ilg ind synctex.gz';
+$clean_ext = 'bbl bcf run.xml idx ilg ind synctex.gz minted* _minted*';
 
 # Chinese index: prefer system zhmakeindex over bundled ./zhmakeindex (x86_64 may SIGSEGV on Apple Silicon).
 sub mathbook_zhmakeindex {

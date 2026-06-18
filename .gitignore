@@ -30,5 +30,12 @@
 # macOS
 .DS_Store
 
+# minted v3 cache
+_minted/
+_minted-*
+*.message.minted
+__pycache__/
+*.pyc
+.latexminted_config
 # Per-project Makefile overrides (see Makefile.local.example)
 Makefile.local

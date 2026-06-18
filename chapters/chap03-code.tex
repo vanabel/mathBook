@@ -1,0 +1,43 @@
+\chapter{代码高亮示例}
+
+本节演示 \texttt{minted} 插入代码。编译需 \texttt{-shell-escape}，且系统已安装 \texttt{latexminted}（见 \texttt{docs/minted.md}）。
+
+\section{Python}
+
+\begin{minted}{python}
+def fib(n: int) -> int:
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+
+print(fib(10))
+\end{minted}
+
+\section{Wolfram Language（Mathematica）}
+
+Pygments 自带的 \texttt{mathematica} 词法器把所有标识符都标为 \texttt{Name}，\texttt{Integrate}、\texttt{Sin} 等系统函数不会单独上色。本模板提供 \texttt{wolfram} 环境：按 Wolfram 惯例将\textbf{大写开头}的符号视为内置函数（需先执行 \texttt{make minted-setup}，见 \texttt{docs/minted.md}）。
+
+\begin{wolfram}
+(* 计算单位球面的高斯曲率 *)
+gaussianCurvature[r_] := 1/r^2
+
+Integrate[gaussianCurvature[r], {r, 0, 1}]
+\end{wolfram}
+
+行内代码可用 \wl{D[Sin[x]^2, x]}。
+
+对比：下列 \texttt{mathematica} 环境使用 Pygments 默认词法器，内置函数与用户函数外观相同。
+
+\begin{minted}{mathematica}
+Integrate[Sin[x], {x, 0, Pi}]
+\end{minted}
+
+\section{\LaTeX}
+
+\begin{minted}{latex}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\[
+  \norm{A x} \le \norm{A}\,\norm{x}.
+\]
+\end{minted}

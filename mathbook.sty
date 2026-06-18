@@ -70,6 +70,29 @@
 
 \setlength{\footskip}{14pt}
 
+% Code listings (minted v3+; needs -shell-escape and latexminted on PATH)
+\RequirePackage{minted}
+\setminted{
+  breaklines,
+  breakanywhere,
+  fontsize=\small,
+  autogobble,
+  tabsize=2
+}
+% Wolfram: stock Pygments mathematica lexer does not style builtins (Integrate, Sin).
+% Custom lexer pygments/wolfram_lexer.py; run `make minted-setup` once.
+\newcommand{\MBWolframLexer}{pygments/wolfram_lexer.py:WolframBookLexer}
+\begingroup
+\catcode`\^^M=\active
+\gdef\MBWolframMinted@i#1{%
+  \begin{minted}[#1]{\MBWolframLexer}^^M}%
+\endgroup
+\newenvironment{wolfram}%
+  {\VerbatimEnvironment%
+   \FVExtraReadOArgBeforeVEnv{\MBWolframMinted@i}}%
+  {\end{minted}}
+\newcommand{\wl}[1]{\mintinline{\MBWolframLexer}|#1|}
+
 \RequirePackage{imakeidx}
 \makeatletter
 \def\imki@progdefault{zhmakeindex}
