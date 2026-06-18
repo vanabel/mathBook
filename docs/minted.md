@@ -70,6 +70,19 @@ make pdf
 
 macOS 常见路径：`/Library/TeX/texbin/latexminted`
 
+### Python 3.14 与 `ArgParser ... color`
+
+TeX Live 2025 自带的 `latexminted` 0.6.x 在 **Python 3.14** 上会崩溃（`argparse` 向子解析器传入 `color=`）。表现与「找不到 latexminted」相同。
+
+本模板在检测到 Python ≥ 3.14 时，自动将 `scripts/shim/python3` 置于 `PATH` 最前，使 `latexminted` 的 `#!/usr/bin/env python3` 改用 3.8–3.13。长期方案：`tlmgr update minted`（minted 3.8+ / latexminted 0.7.1+），或 `pip install latexminted` 并使用兼容的 Python。
+
+验证 shim：
+
+```bash
+PATH="$(pwd)/scripts/shim:$PATH" python3 --version   # 应 < 3.14
+latexminted --version
+```
+
 ### Windows 补充
 
 - TeX Live：确认 `C:\texlive\2025\bin\windows\latexminted.exe` 在 PATH 中

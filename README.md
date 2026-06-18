@@ -87,3 +87,5 @@ Makefile / .latexmkrc
 ### 注意事项（一句话）
 
 **勿** `export PATH="$(pwd):$PATH"` — 会误用 bundled `zhmakeindex`（ARM 段错误）并可能找不到 `latexminted`。细节见 [docs/build.md](docs/build.md)。
+
+**minted 报错 / 无法高亮**：除 PATH 外，**Python 3.14** 与 TeX Live 自带 `latexminted` 0.6.x 不兼容；模板已用 `scripts/shim` 自动规避，见 [docs/minted.md](docs/minted.md)。

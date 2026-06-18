@@ -1,0 +1,8 @@
+#!/bin/sh
+# TeX Live latexminted 0.6.x fails on Python 3.14+ (argparse color=). Prefer 3.8–3.13.
+for v in 3.13 3.12 3.11 3.10 3.9 3.8; do
+  if command -v "python${v}" >/dev/null 2>&1; then
+    exec "python${v}" "$@"
+  fi
+done
+exec /usr/bin/env python3 "$@"

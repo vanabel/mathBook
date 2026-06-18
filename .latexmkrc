@@ -14,9 +14,19 @@ BEGIN {
     last;
   }
   if ($texbin) {
-    $ENV{PATH} = "$texbin:$ENV{PATH}" unless $ENV{PATH} =~ /\Q$texbin\E/;
     $ENV{SELFAUTOLOC} = $texbin
       unless defined $ENV{SELFAUTOLOC} && length $ENV{SELFAUTOLOC};
+  }
+  # latexminted 0.6.x breaks on Python 3.14+; shim python3 → 3.8–3.13 (must precede TEX bin).
+  my $pyshim = abs_path('scripts/shim');
+  if (-d $pyshim && -x "$pyshim/python3") {
+    my $py314 = system('python3 -c "import sys; sys.exit(0 if sys.version_info[:2]>=(3,14) else 1)" 2>/dev/null');
+    if ($py314 == 0) {
+      $ENV{PATH} = "$pyshim:$ENV{PATH}" unless $ENV{PATH} =~ /\Q$pyshim\E/;
+    }
+  }
+  if ($texbin) {
+    $ENV{PATH} = "$texbin:$ENV{PATH}" unless $ENV{PATH} =~ /\Q$texbin\E/;
   }
 }
 

@@ -19,10 +19,12 @@ export ZHMAKEINDEX
 
 # TeX bin (latexminted for minted v3): resolve xelatex/xetex via command -v + abs_path.
 TEXBIN := $(shell perl -MCwd=abs_path -e 'for (qw(xelatex xetex)) { my $$p=`command -v $$_ 2>/dev/null`; chomp $$p; next unless $$p && -x $$p; $$p=abs_path($$p); if ($$p =~ m{^(.*)/(xelatex|xetex)$$}) { print $$1; last } }')
+# latexminted 0.6.x + Python 3.14: prepend scripts/shim/python3 (before TEX bin).
+MINTED_SHIM_PREFIX := $(shell perl -MCwd=abs_path -e 'my $$s=abs_path("scripts/shim"); -d $$s && -x "$$s/python3" or exit; system("python3","-c","import sys; sys.exit(0 if sys.version_info[:2]>=(3,14) else 1)")==0 or exit; print "$$s:"')
 ifneq ($(TEXBIN),)
 export SELFAUTOLOC := $(TEXBIN)
-export PATH := $(TEXBIN):$(PATH)
 endif
+export PATH := $(MINTED_SHIM_PREFIX)$(if $(TEXBIN),$(TEXBIN):,)$(PATH)
 
 UTREE = $(shell kpsewhich -var-value TEXMFHOME)
 LOCAL = $(shell kpsewhich -var-value TEXMFLOCAL)
@@ -90,7 +92,7 @@ zip: pdf
 		$(PDF) \
 		$(MAIN) mathbook.sty elegantbook.cls references.bib \
 		zh.ist zhmakeindex \
-		chapters/ metapost/ pygments/ docs/ \
+		chapters/ metapost/ pygments/ docs/ scripts/ \
 		.latexminted.config.example \
 		Makefile README.md .gitignore .latexmkrc \
 		-x ".git/*" -x "*.zip" -x ".DS_Store"
