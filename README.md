@@ -9,6 +9,7 @@
 | 开始写作 | 改 `main.tex` 元数据 → 编辑 `chapters/*.tex` → `make watch` |
 | 换入口文件 | `make MAIN=book.tex` 或在 `Makefile.local` 写 `MAIN := book.tex` |
 | 加文献 | `references.bib` + `\cite{key}` → 见 [docs/bibliography.md](docs/bibliography.md) |
+| 交叉引用 | `\cref{...}` / `\Cref{...}`（中文「第×章」「式 (×)」等）→ 见下文 |
 | 插入代码 | `\begin{minted}{python}`；Wolfram 用 `\begin{wolfram}` → 见 [docs/minted.md](docs/minted.md) |
 | 作图 | `main.tex` 示例 `mpostinl` + `metapost/`；不用图可删相关 `\input` |
 | 中文索引 | 需安装 `zhmakeindex` → 见 [docs/zhmakeindex.md](docs/zhmakeindex.md) |
@@ -57,6 +58,29 @@ Makefile / .latexmkrc
 2. **章节**：`chapters/*.tex`，`main.tex` 中 `\include{...}`。
 3. **文献**：`references.bib`；分章参考文献见 `chapters/chap01.tex`。
 4. **索引**：`\index{...}` 或 `\iemph[分类]{术语}`。
+5. **交叉引用**：给定理、公式、图等加 `\label{...}`，正文用 `\cref{...}`（见下文）。
+
+---
+
+### 交叉引用（cleveref）
+
+`mathbook.sty` 已加载 `cleveref` 并配置中文名称与格式。写作时先 `\label`，再引用：
+
+```latex
+见 \cref{thm:bianchi}、\cref{eq:1.1.1} 与 \cref{fig:demo}。
+由 \crefrange{sec:ymh}{sec:next} 可知……
+```
+
+| 对象 | `\cref` 输出示例 |
+|------|------------------|
+| 章 | 第 1 章 |
+| 节 | 第 1.1 节 |
+| 式 | 式 (1.1) |
+| 图 | 图 1.1 |
+| 附录 | 附录 A |
+| 定理 / 引理 / 定义 / 推论 / 命题 / 例 / 问题 / 注意 | 定理 1.1、引理 1.2 … |
+
+`\Cref{...}` 用于句首（首字大写）。定理类环境对应 `thm`、`lem`、`defn`、`cor`、`prop`、`examp`、`prob`、`rmk`；配置见 `mathbook.sty` 中 `\crefname` / `\crefformat`。`\newtheorem{conj}{猜想}` 尚未配置 `\cref`，需时可自行补 `\crefname{conj}{猜想}{猜想}`。
 
 ---
 
