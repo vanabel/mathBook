@@ -1,4 +1,4 @@
-.PHONY: all pdf watch live clean distclean zip install install-user help minted-setup
+.PHONY: all pdf watch live stop clean distclean zip install install-user help minted-setup
 
 NAME := mathbook
 
@@ -43,6 +43,7 @@ help:
 	@echo "make        单次编译 $(PDF)"
 	@echo "make watch  实时自动编译（latexmk -pvc，保存即增量编译并刷新 PDF）"
 	@echo "make live   同 make watch"
+	@echo "make stop   结束本项目相关的 latexmk/xelatex/biber 等编译进程"
 	@echo "make clean  清理中间文件"
 	@echo "make minted-setup  一次性配置 Wolfram 代码高亮（latexminted 自定义词法器）"
 	@echo "make zip    打包发布"
@@ -75,6 +76,60 @@ watch live:
 	@echo ">> zhmakeindex: $(ZHMAKEINDEX)"
 	@echo ">> 实时编译已开启：保存 .tex 后自动增量编译并刷新 PDF（Ctrl+C 退出）"
 	$(LATEXMK) -pvc -view=pdf $(MAIN)
+
+# Stop this project's latexmk/xelatex/biber/... (and make watch/live/pdf in this cwd).
+# Scoped by CURDIR / MAIN / JOB so other TeX projects are left alone.
+stop:
+	@echo ">> stopping LaTeX build for $(MAIN) in $(CURDIR)"
+	@perl -e ' \
+	  use strict; use warnings; \
+	  my $$dir  = q($(CURDIR)); \
+	  my $$main = q($(MAIN)); \
+	  my $$job  = q($(JOB)); \
+	  my $$self = $$$$; \
+	  my $$tool_tok = qr{(?:^|\s)(?:\S*/)?(?:latexmk|xelatex|xetex|pdflatex|lualatex|biber|bibtex|zhmakeindex|makeindex|mpost|latexminted)(?:\s|$$)}; \
+	  my $$shell = qr{(?:^|/)(?:zsh|bash|sh|dash|fish|csh|tcsh)(?:\s|$$)}; \
+	  my %want; \
+	  open my $$ps, "-|", "ps", "-axo", "pid=,args=" or die $$!; \
+	  while (<$$ps>) { \
+	    chomp; \
+	    next unless /^\s*(\d+)\s+(.*)\z/; \
+	    my ($$pid, $$args) = ($$1 + 0, $$2); \
+	    next if $$pid == $$self; \
+	    next if $$args =~ $$shell; \
+	    next unless $$args =~ $$tool_tok; \
+	    next unless index($$args, $$dir) >= 0 \
+	             || index($$args, $$main) >= 0 \
+	             || $$args =~ /(?:^|\s|\/)\Q$$job\E\.(?:tex|bcf|idx|ind|ilg|mp|aux|fls|fdb_latexmk)\b/; \
+	    $$want{$$pid} = $$args; \
+	  } \
+	  close $$ps; \
+	  for my $$pid (split /\n/, qx(pgrep -x make 2>/dev/null)) { \
+	    $$pid += 0; \
+	    next unless $$pid; \
+	    next if $$pid == $$self; \
+	    my $$cwd = qx(lsof -a -p $$pid -d cwd -Fn 2>/dev/null); \
+	    next unless $$cwd =~ /^n\Q$$dir\E\s*\z/m; \
+	    my $$args = qx(ps -p $$pid -o args= 2>/dev/null); \
+	    chomp $$args; \
+	    next unless $$args =~ /(?:^|\s)(?:watch|live|pdf)(?:\s|$$)/; \
+	    $$want{$$pid} = $$args; \
+	  } \
+	  unless (%want) { print ">> no matching processes\n"; exit 0; } \
+	  for my $$pid (sort { $$a <=> $$b } keys %want) { \
+	    print "   TERM $$pid  $$want{$$pid}\n"; \
+	    kill "TERM", $$pid; \
+	  } \
+	  select undef, undef, undef, 0.4; \
+	  for my $$pid (keys %want) { \
+	    next unless kill 0, $$pid; \
+	    my $$args = qx(ps -p $$pid -o args= 2>/dev/null); \
+	    chomp $$args; \
+	    print "   KILL $$pid  $$args\n"; \
+	    kill "KILL", $$pid; \
+	  } \
+	  print ">> stopped\n"; \
+	'
 
 clean:
 	latexmk -c $(MAIN)

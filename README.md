@@ -9,13 +9,14 @@
 | 开始写作 | 改 `main.tex` 元数据 → 编辑 `chapters/*.tex` → `make watch` |
 | 换入口文件 | `make MAIN=book.tex` 或在 `Makefile.local` 写 `MAIN := book.tex` |
 | 加文献 | `references.bib` + `\cite{key}` → 见 [docs/bibliography.md](docs/bibliography.md) |
-| 交叉引用 | `\cref{...}` / `\Cref{...}`（中文「第×章」「式 (×)」等）→ 见下文 |
+| 交叉引用 | `\cref{...}` / `\Cref{...}`（「第×章」等整段可点；公式多为 `(×)`）→ 见下文 |
 | 插入代码 | `\begin{minted}{python}`；Wolfram 用 `\begin{wolfram}` → 见 [docs/minted.md](docs/minted.md) |
 | 作图 | `main.tex` 示例 `mpostinl` + `metapost/`；不用图可删相关 `\input` |
 | 中文索引 | 需安装 `zhmakeindex` → 见 [docs/zhmakeindex.md](docs/zhmakeindex.md) |
+| 停掉编译 | `make stop`（结束本项目相关的 `latexmk` / `xelatex` 等） |
 | 编译出问题 | 见 [docs/build.md](docs/build.md) |
 
-**引擎**：XeLaTeX + Biber + `latexmk`（`.latexmkrc`：`-shell-escape`、SyncTeX、中文索引）。
+**引擎**：XeLaTeX + Biber + `latexmk -pdf`（`.latexmkrc`：xelatex 直接出 PDF、`-shell-escape`、SyncTeX、中文索引）。
 
 **三个外部工具**：`zhmakeindex`（索引）、`latexminted`（代码高亮，TeX Live 2024+ 通常已有）、MetaPost（仅作图时需要）。
 
@@ -26,6 +27,7 @@
 ```bash
 make              # 编译 main.pdf
 make watch        # 保存即重编（写作推荐）
+make stop         # 结束本项目相关的 latexmk / xelatex 等进程
 make minted-setup # 仅用 Wolfram 高亮时，执行一次
 make help
 ```
@@ -73,11 +75,11 @@ Makefile / .latexmkrc
 
 | 对象 | `\cref` 输出示例 |
 |------|------------------|
-| 章 | 第 1 章 |
-| 节 | 第 1.1 节 |
-| 式 | 式 (1.1) |
+| 章 | 第1章（整段可点） |
+| 节 | 第1.1节（整段可点） |
+| 式 | (1.1)（推荐正文用 `\eqref{eq:...}`） |
 | 图 | 图 1.1 |
-| 附录 | 附录 A |
+| 附录 | 附录A（整段可点） |
 | 定理 / 引理 / 定义 / 推论 / 命题 / 例 / 问题 / 注意 | 定理 1.1、引理 1.2 … |
 
 `\Cref{...}` 用于句首（首字大写）。定理类环境对应 `thm`、`lem`、`defn`、`cor`、`prop`、`examp`、`prob`、`rmk`；配置见 `mathbook.sty` 中 `\crefname` / `\crefformat`。`\newtheorem{conj}{猜想}` 尚未配置 `\cref`，需时可自行补 `\crefname{conj}{猜想}{猜想}`。
