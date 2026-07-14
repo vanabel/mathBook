@@ -28,9 +28,13 @@ BEGIN {
   if ($texbin) {
     $ENV{PATH} = "$texbin:$ENV{PATH}" unless $ENV{PATH} =~ /\Q$texbin\E/;
   }
+  # minted v3's Python helper needs the TeX output directory in some
+  # TeX Live 2025 setups, even when the build writes into the source dir.
+  $ENV{TEXMF_OUTPUT_DIRECTORY} = abs_path('.')
+    unless defined $ENV{TEXMF_OUTPUT_DIRECTORY} && length $ENV{TEXMF_OUTPUT_DIRECTORY};
 }
 
-$pdf_mode = 5;            # xelatex → .xdv → xdvipdfmx → .pdf
+$pdf_mode = 1;            # latexmk -pdf, with xelatex used as the PDF engine
 $dvi_mode = 0;
 $postscript_mode = 0;
 $bibtex_use = 2;          # biber
@@ -38,7 +42,8 @@ $recorder = 1;            # .fdb_latexmk：追踪依赖，增量编译
 $dependents_list = 1;
 $show_time = 1;
 
-$xelatex = 'xelatex -shell-escape -synctex=1 -interaction=nonstopmode %O %S';
+$pdflatex = 'xelatex -shell-escape -synctex=1 -interaction=nonstopmode %O %S';
+$xelatex = $pdflatex;
 $clean_ext = 'bbl bcf run.xml idx ilg ind synctex.gz minted* _minted*';
 
 # Chinese index: prefer system zhmakeindex over bundled ./zhmakeindex (x86_64 may SIGSEGV on Apple Silicon).

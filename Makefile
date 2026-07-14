@@ -25,6 +25,7 @@ ifneq ($(TEXBIN),)
 export SELFAUTOLOC := $(TEXBIN)
 endif
 export PATH := $(MINTED_SHIM_PREFIX)$(if $(TEXBIN),$(TEXBIN):,)$(PATH)
+export TEXMF_OUTPUT_DIRECTORY := $(CURDIR)
 
 UTREE = $(shell kpsewhich -var-value TEXMFHOME)
 LOCAL = $(shell kpsewhich -var-value TEXMFLOCAL)
@@ -33,7 +34,7 @@ DIR_SOURCE = $(LOCAL)/source/latex/$(NAME)
 DIR_DOC    = $(LOCAL)/doc/latex/$(NAME)
 DIR_EXAMPLES = $(DIR_DOC)/examples
 
-LATEXMK = latexmk -xelatex
+LATEXMK = latexmk -pdf
 
 all: pdf
 

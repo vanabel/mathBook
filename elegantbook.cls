@@ -131,7 +131,7 @@
 
 %% Load imakeidx for index support with hyperlinks
 \RequirePackage{imakeidx}
-\makeindex
+%\makeindex
 
 %% device settings
 \RequirePackage{geometry}
