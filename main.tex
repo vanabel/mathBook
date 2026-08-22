@@ -13,13 +13,46 @@
 % - Edit the "Book metadata" block below.
 % - Put bib entries into references.bib (or change \addbibresource{...}).
 % - Add chapters under chapters/ and \include them below.
+% - Edit TERMINOLOGY.md and run `make terminology` for the bilingual glossary.
 % - Compile: make   (requires XeLaTeX + biber + zhmakeindex in PATH)
 %
 % Example instance: Jaffe--Taubes, *Vortices and Monopoles*.
 % =====================================================================
 
 \ExecuteBibliographyOptions{sorting=nyt}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
 \usepackage{mathbook}
+\usepackage[toc,nonumberlist,nopostdot]{glossaries-extra}
+\usepackage{glossary-longbooktabs}
+
+% Bilingual terminology table (optional): edit TERMINOLOGY.md, then `make terminology`.
+% Omit this block, the \input, and the \printnoidxglossary block if unused.
+\newglossary[term-glg]{terms}{term-gls}{term-glo}{中英文术语对照表}
+\makenoidxglossaries
+
+\newcommand{\terminologydescription}[2]{%
+  \textbf{#1}\newline
+  {\small\color{gray}{#2}}%
+}
+
+\newglossarystyle{terminologytable}{%
+  \setglossarystyle{long-booktabs}%
+  \renewenvironment{theglossary}
+    {\begin{longtable}{p{0.30\textwidth}p{0.62\textwidth}}}
+    {\end{longtable}}%
+  \renewcommand*{\glossaryheader}{%
+    \toprule
+    \textbf{英文术语} & \textbf{推荐译名及说明}\\
+    \midrule
+    \endhead
+    \bottomrule
+    \endfoot}%
+  \renewcommand*{\glsgroupskip}{}%
+}
+
+\input{chapters/terminology-glossary}
 
 % MetaPost (optional): omit all three lines if the book has no mpost figures.
 \usepackage[checksum,lineno,labelnames,latex]{mpostinl}
@@ -59,4 +92,14 @@
 
 \backmatter
 \printindex
+\cleardoublepage
+\glsaddall[types={terms}]
+\markboth{中英文术语对照表}{中英文术语对照表}
+\printnoidxglossary[
+  type=terms,
+  style=terminologytable,
+  sort=word,
+  title={中英文术语对照表},
+  toctitle={中英文术语对照表}
+]
 \end{document}

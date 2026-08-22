@@ -1,4 +1,4 @@
-.PHONY: all pdf watch live stop clean distclean zip install install-user help minted-setup
+.PHONY: all pdf terminology watch live stop clean distclean zip install install-user help minted-setup
 
 NAME := mathbook
 
@@ -41,6 +41,7 @@ all: pdf
 help:
 	@echo "入口文件: $(MAIN)  (覆盖: make MAIN=book.tex 或 Makefile.local)"
 	@echo "make        单次编译 $(PDF)"
+	@echo "make terminology  从 TERMINOLOGY.md 生成中英文术语对照表"
 	@echo "make watch  实时自动编译（latexmk -pvc，保存即增量编译并刷新 PDF）"
 	@echo "make live   同 make watch"
 	@echo "make stop   结束本项目相关的 latexmk/xelatex/biber 等编译进程"
@@ -71,6 +72,9 @@ pdf:
 	@echo ">> zhmakeindex: $(ZHMAKEINDEX)"
 	@echo ">> TeX bin:     $(TEXBIN)"
 	$(LATEXMK) $(MAIN)
+
+terminology:
+	node tools/generate-terminology-glossary.mjs
 
 watch live:
 	@echo ">> zhmakeindex: $(ZHMAKEINDEX)"
@@ -147,8 +151,9 @@ zip: pdf
 	zip -r $(ZIP) \
 		$(PDF) \
 		$(MAIN) mathbook.sty elegantbook.cls references.bib \
+		TERMINOLOGY.md \
 		zh.ist zhmakeindex \
-		chapters/ metapost/ pygments/ docs/ scripts/ \
+		chapters/ metapost/ pygments/ docs/ scripts/ tools/ \
 		.latexminted.config.example \
 		Makefile README.md .gitignore .latexmkrc \
 		-x ".git/*" -x "*.zip" -x ".DS_Store"
@@ -157,16 +162,16 @@ install: $(NAME).sty elegantbook.cls
 	@echo "Installing to $(LOCAL)"
 	sudo mkdir -p $(DIR_TEX) $(DIR_SOURCE) $(DIR_DOC) $(DIR_EXAMPLES)
 	sudo cp $(NAME).sty elegantbook.cls $(DIR_TEX)/
-	sudo cp README.md $(DIR_DOC)/
+	sudo cp README.md TERMINOLOGY.md $(DIR_DOC)/
 	sudo cp $(MAIN) references.bib zh.ist zhmakeindex Makefile $(DIR_EXAMPLES)/
-	sudo cp -r chapters $(DIR_EXAMPLES)/
+	sudo cp -r chapters tools $(DIR_EXAMPLES)/
 	sudo mktexlsr
 
 install-user: $(NAME).sty elegantbook.cls
 	@echo "Installing to $(UTREE)"
 	mkdir -p $(UTREE)/tex/latex/$(NAME) $(UTREE)/source/latex/$(NAME) $(UTREE)/doc/latex/$(NAME) $(UTREE)/doc/latex/$(NAME)/examples
 	cp $(NAME).sty elegantbook.cls $(UTREE)/tex/latex/$(NAME)/
-	cp README.md $(UTREE)/doc/latex/$(NAME)/
+	cp README.md TERMINOLOGY.md $(UTREE)/doc/latex/$(NAME)/
 	cp $(MAIN) references.bib zh.ist zhmakeindex Makefile $(UTREE)/doc/latex/$(NAME)/examples/
-	cp -r chapters $(UTREE)/doc/latex/$(NAME)/examples/
+	cp -r chapters tools $(UTREE)/doc/latex/$(NAME)/examples/
 	mktexlsr

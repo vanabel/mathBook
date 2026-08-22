@@ -13,12 +13,13 @@
 | 插入代码 | `\begin{minted}{python}`；Wolfram 用 `\begin{wolfram}` → 见 [docs/minted.md](docs/minted.md) |
 | 作图 | `main.tex` 示例 `mpostinl` + `metapost/`；不用图可删相关 `\input` |
 | 中文索引 | 需安装 `zhmakeindex` → 见 [docs/zhmakeindex.md](docs/zhmakeindex.md) |
+| 术语对照表 | 编辑 `TERMINOLOGY.md` → `make terminology` → 书末「中英文术语对照表」 |
 | 停掉编译 | `make stop`（结束本项目相关的 `latexmk` / `xelatex` 等） |
 | 编译出问题 | 见 [docs/build.md](docs/build.md) |
 
 **引擎**：XeLaTeX + Biber + `latexmk -pdf`（`.latexmkrc`：xelatex 直接出 PDF、`-shell-escape`、SyncTeX、中文索引）。
 
-**三个外部工具**：`zhmakeindex`（索引）、`latexminted`（代码高亮，TeX Live 2024+ 通常已有）、MetaPost（仅作图时需要）。
+**三个外部工具**：`zhmakeindex`（索引）、`latexminted`（代码高亮，TeX Live 2024+ 通常已有）、MetaPost（仅作图时需要）。`make terminology` 另需 Node.js。
 
 ---
 
@@ -26,6 +27,7 @@
 
 ```bash
 make              # 编译 main.pdf
+make terminology  # 从 TERMINOLOGY.md 生成书末术语表
 make watch        # 保存即重编（写作推荐）
 make stop         # 结束本项目相关的 latexmk / xelatex 等进程
 make minted-setup # 仅用 Wolfram 高亮时，执行一次
@@ -45,6 +47,8 @@ main.tex              入口
 mathbook.sty          导言区合集
 elegantbook.cls       文档类
 chapters/             章节
+TERMINOLOGY.md        中英文术语对照表（维护源）
+tools/                从 Markdown 生成 glossary
 references.bib        文献
 metapost/             MetaPost
 pygments/             Wolfram 词法器（可选）
@@ -60,7 +64,8 @@ Makefile / .latexmkrc
 2. **章节**：`chapters/*.tex`，`main.tex` 中 `\include{...}`。
 3. **文献**：`references.bib`；分章参考文献见 `chapters/chap01.tex`。
 4. **索引**：`\index{...}` 或 `\iemph[分类]{术语}`。
-5. **交叉引用**：给定理、公式、图等加 `\label{...}`，正文用 `\cref{...}`（见下文）。
+5. **术语对照表**：改 `TERMINOLOGY.md` 后 `make terminology`；勿手改 `chapters/terminology-glossary.tex`。该表与拼音索引分开：索引标页码，术语表给推荐译名。
+6. **交叉引用**：给定理、公式、图等加 `\label{...}`，正文用 `\cref{...}`（见下文）。
 
 ---
 

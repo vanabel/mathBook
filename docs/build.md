@@ -10,7 +10,7 @@
 | `zhmakeindex` | 中文索引（见 [zhmakeindex.md](zhmakeindex.md)） |
 | `biber` | 参考文献 |
 
-`make watch` 等价于 `latexmk -pdf -pvc -view=pdf`。日志里多次 `xelatex` 属正常。
+`make watch` 等价于 `latexmk -pdf -pvc -view=pdf`。日志里多次 `xelatex` 属正常。`make terminology` 只重写 `chapters/terminology-glossary.tex`，不启动 LaTeX；该文件由 Markdown 生成，不要手改。术语对照表与拼音索引分开：前者给推荐译名，后者标页码。
 
 手动：
 
@@ -38,6 +38,7 @@ MAIN := book.tex
 | 命令 | 说明 |
 |------|------|
 | `make` / `make pdf` | 单次完整编译 |
+| `make terminology` | 从 `TERMINOLOGY.md` 生成 `chapters/terminology-glossary.tex`（不跑 LaTeX） |
 | `make watch` / `make live` | 保存即重编并刷新 PDF |
 | `make stop` | 结束本项目相关的 `latexmk` / `xelatex` / `biber` 等进程（也会停掉本目录下的 `make watch`/`live`/`pdf`） |
 | `make minted-setup` | Wolfram 词法器白名单（见 [minted.md](minted.md)） |
