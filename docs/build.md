@@ -10,7 +10,7 @@
 | `zhmakeindex` | 中文索引（见 [zhmakeindex.md](zhmakeindex.md)） |
 | `biber` | 参考文献 |
 
-`make watch` 等价于 `latexmk -pdf -pvc -view=pdf`。日志里多次 `xelatex` 属正常。`make terminology` 只重写 `chapters/terminology-glossary.tex`，不启动 LaTeX；该文件由 Markdown 生成，不要手改。术语对照表与拼音索引分开：前者给推荐译名，后者标页码。
+`make watch` 等价于 `latexmk -pdf -pvc -view=pdf`。日志里多次 `xelatex` 属正常。术语对照表需 `\usepackage[terminology]{mathbook}`。`make terminology` 只重写 `chapters/terminology-glossary.tex`，不启动 LaTeX；该文件由 Markdown 生成，不要手改。术语对照表与拼音索引分开：前者给推荐译名，后者标页码。
 
 手动：
 

@@ -13,7 +13,7 @@
 | 插入代码 | `\begin{minted}{python}`；Wolfram 用 `\begin{wolfram}` → 见 [docs/minted.md](docs/minted.md) |
 | 作图 | `main.tex` 示例 `mpostinl` + `metapost/`；不用图可删相关 `\input` |
 | 中文索引 | 需安装 `zhmakeindex` → 见 [docs/zhmakeindex.md](docs/zhmakeindex.md) |
-| 术语对照表 | 编辑 `TERMINOLOGY.md` → `make terminology` → 书末「中英文术语对照表」 |
+| 术语对照表 | `\usepackage[terminology]{mathbook}`；编辑 `TERMINOLOGY.md` → `make terminology` |
 | 停掉编译 | `make stop`（结束本项目相关的 `latexmk` / `xelatex` 等） |
 | 编译出问题 | 见 [docs/build.md](docs/build.md) |
 
@@ -64,7 +64,7 @@ Makefile / .latexmkrc
 2. **章节**：`chapters/*.tex`，`main.tex` 中 `\include{...}`。
 3. **文献**：`references.bib`；分章参考文献见 `chapters/chap01.tex`。
 4. **索引**：`\index{...}` 或 `\iemph[分类]{术语}`。
-5. **术语对照表**：改 `TERMINOLOGY.md` 后 `make terminology`；勿手改 `chapters/terminology-glossary.tex`。该表与拼音索引分开：索引标页码，术语表给推荐译名。
+5. **术语对照表**：导言区加 `[terminology]`，改 `TERMINOLOGY.md` 后 `make terminology`；勿手改 `chapters/terminology-glossary.tex`。词条输入与书末打印由该选项自动完成。该表与拼音索引分开：索引标页码，术语表给推荐译名。
 6. **交叉引用**：给定理、公式、图等加 `\label{...}`，正文用 `\cref{...}`（见下文）。
 
 ---

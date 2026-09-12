@@ -2,8 +2,13 @@
 %% -*- coding: utf-8 -*-
 % mathbook.sty -- Preamble bundle for elegantbook math books
 % (Chinese index, theorems+cleveref, biblatex tweaks)
+% Optional: [terminology] bilingual glossary from TERMINOLOGY.md
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{mathbook}[2026/06/12 Math book preamble bundle]
+\ProvidesPackage{mathbook}[2026/09/13 Math book preamble bundle]
+
+\newif\ifMBterminology
+\DeclareOption{terminology}{\MBterminologytrue}
+\ProcessOptions\relax
 
 \RequirePackage{bookmark}
 \RequirePackage{xparse}
@@ -135,5 +140,79 @@
 \DeclareFieldFormat{addendum}{%
   \addspace\href{https://mathscinet.ams.org/mathscinet-getitem?mr=#1}{MR#1}%
 }
+
+\ifMBterminology
+  \RequirePackage{array}
+  \RequirePackage{longtable}
+  \RequirePackage{booktabs}
+  \RequirePackage[toc,nonumberlist,nopostdot]{glossaries-extra}
+  \RequirePackage{glossary-longbooktabs}
+  \newglossary[term-glg]{terms}{term-gls}{term-glo}{中英文术语对照表}
+  \makenoidxglossaries
+  \newcommand{\terminologydescription}[2]{%
+    \textbf{#1}\newline
+    {\small\color{gray}{#2}}%
+  }
+  \newlength{\mbtermnamewidth}
+  \newlength{\mbtermdescwidth}
+  \newlength{\mbtermmeasure}
+  \newcommand{\mbsetupterminologycolumns}{%
+    \settowidth{\mbtermnamewidth}{\textbf{英文术语}}%
+    \forglsentries[terms]{\mbtermkey}{%
+      \settowidth{\mbtermmeasure}{\glossentryname{\mbtermkey}}%
+      \ifdim\mbtermmeasure>\mbtermnamewidth
+        \setlength{\mbtermnamewidth}{\mbtermmeasure}%
+      \fi
+    }%
+    \addtolength{\mbtermnamewidth}{0.5em}%
+    \ifdim\mbtermnamewidth>0.62\textwidth
+      \setlength{\mbtermnamewidth}{0.62\textwidth}%
+    \fi
+    \setlength{\mbtermdescwidth}{\dimexpr\textwidth-\mbtermnamewidth-2\tabcolsep\relax}%
+  }
+  \newglossarystyle{terminologytable}{%
+    \setglossarystyle{long-booktabs}%
+    \renewenvironment{theglossary}
+      {\mbsetupterminologycolumns
+       \begin{longtable}{@{}%
+         >{\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000\arraybackslash}p{\mbtermnamewidth}%
+         >{\raggedright\arraybackslash}p{\mbtermdescwidth}@{}}}
+      {\end{longtable}}%
+    \renewcommand*{\glossaryheader}{%
+      \toprule
+      \textbf{英文术语} & \textbf{推荐译名及说明}\\
+      \midrule
+      \endhead
+      \bottomrule
+      \endfoot}%
+    \renewcommand*{\glsgroupskip}{}%
+  }
+  \providecommand{\MBterminologyfile}{chapters/terminology-glossary}
+  \IfFileExists{\MBterminologyfile}{%
+    \input{\MBterminologyfile}%
+  }{%
+    \PackageError{mathbook}{%
+      Terminology file `\MBterminologyfile' not found.\MessageBreak
+      Run `make terminology' after editing TERMINOLOGY.md}{}%
+  }
+  \newif\ifMBterminologyprinted
+  \newcommand{\printterminology}{%
+    \ifMBterminologyprinted
+    \else
+      \MBterminologyprintedtrue
+      \cleardoublepage
+      \glsaddall[types={terms}]%
+      \markboth{中英文术语对照表}{中英文术语对照表}%
+      \printnoidxglossary[
+        type=terms,
+        style=terminologytable,
+        sort=word,
+        title={中英文术语对照表},
+        toctitle={中英文术语对照表}%
+      ]%
+    \fi
+  }
+  \AtEndDocument{\printterminology}
+\fi
 
 \endinput

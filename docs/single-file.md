@@ -9,7 +9,7 @@
    - `\NeedsTeXFormat{LaTeX2e}`
    - `\ProvidesPackage{mathbook}[...]`
    - `\endinput`（若有）
-3. 删除 `\usepackage{mathbook}`。
+3. 删除 `\usepackage{mathbook}` 或 `\usepackage[terminology]{mathbook}`。
 
 若对方无 `elegantbook.cls`，需一并提供或改用其他文档类。
 

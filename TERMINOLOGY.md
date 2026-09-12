@@ -4,6 +4,7 @@
 若参考文献使用不同译法，只在首次出现时注明英文原词，不在正文中混用。
 
 不要手改 `chapters/terminology-glossary.tex`；编辑本表后执行 `make terminology`。
+入口文件加上 `\usepackage[terminology]{mathbook}` 即可，生成文件的读入和书末打印由该选项完成。
 可选第四列“规范名词”对接全国科学技术名词审定委员会公布译名；没有则省略该列。
 
 | 英文 | 推荐译名 | 避免用法或说明 |
