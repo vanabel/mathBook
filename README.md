@@ -19,6 +19,8 @@
 
 **引擎**：XeLaTeX + Biber + `latexmk -pdf`（`.latexmkrc`：xelatex 直接出 PDF、`-shell-escape`、SyncTeX、中文索引）。
 
+**MetaPost 增量编译**：`latexmk` 比较 `.mps` 图件时会忽略 `%%CreationDate:` 行。只有生成时间变化时不会触发重编，图件内容变化仍会触发重编。同一书稿目录只需运行一个 `make watch`，避免多个进程同时写入 `.aux` 等构建文件。
+
 **三个外部工具**：`zhmakeindex`（索引）、`latexminted`（代码高亮，TeX Live 2024+ 通常已有）、MetaPost（仅作图时需要）。`make terminology` 另需 Node.js。
 
 ---

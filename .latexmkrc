@@ -44,6 +44,10 @@ $show_time = 1;
 
 $pdflatex = 'xelatex -shell-escape -synctex=1 -interaction=nonstopmode %O %S';
 $xelatex = $pdflatex;
+
+# MetaPost rewrites this timestamp when it regenerates an identical figure.
+$hash_calc_ignore_pattern{'mps'} = '^%%CreationDate:';
+
 $clean_ext = 'bbl bcf run.xml idx ilg ind synctex.gz minted* _minted*';
 
 # Chinese index: prefer system zhmakeindex over bundled ./zhmakeindex (x86_64 may SIGSEGV on Apple Silicon).
