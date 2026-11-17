@@ -29,6 +29,16 @@
   \endgroup
 }
 
+% Proof steps restart at 1 in every proof and stay local to that proof.
+\newcount\MBproofstepnumber
+\AddToHook{env/proof/begin}{\MBproofstepnumber=0\relax}
+\newcommand{\step}[1]{%
+  \par\smallskip
+  \advance\MBproofstepnumber by 1\relax
+  \noindent\textbf{步骤 \the\MBproofstepnumber\quad #1}\par
+  \nobreak
+}
+
 \ctexset{punct=banjiao}
 \RequirePackage[all]{xy}
 \RequirePackage{subcaption}
